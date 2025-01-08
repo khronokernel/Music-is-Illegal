@@ -56,7 +56,7 @@ jobs:
         if: runner.environment == 'github-hosted'
         run:
           /bin/mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "${{ secrets.ORG_MAC_MUSIC_IS_ILLEGAL_PROVISION_PROFILE }}" | /usr/bin/base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
+          echo -n "${{ secrets.ORG_MAC_MUSIC_IS_ILLEGAL_PROVISION_PROFILE }}" | /usr/bin/base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.provisionprofile
 
       - name: Set up Python 3 libraries
         run: python3 -m pip install --requirement requirements.txt
