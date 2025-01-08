@@ -3,6 +3,8 @@
 *.pyc
 .vscode
 *.pkg
+sign.sh
+*.zip
 
 # Xcode Settings
 xcuserdata/

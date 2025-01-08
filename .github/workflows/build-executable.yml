@@ -1,0 +1,93 @@
+name: CI - Build Universal Executable and Package
+
+on:
+  push:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: Build Universal Executable and Package
+    runs-on: macos-latest
+    env:
+      branch: ${{ github.ref }}
+
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # App Signing
+      ORG_MAC_DEVELOPER_ID_APPLICATION_CERT_P12_BASE64: ${{ secrets.ORG_MAC_DEVELOPER_ID_APPLICATION_CERT_P12_BASE64 }}
+      ORG_MAC_DEVELOPER_ID_APPLICATION_CERT_P12_PASSWORD: ${{ secrets.ORG_MAC_DEVELOPER_ID_APPLICATION_CERT_P12_PASSWORD }}
+      # Installer Signing
+      ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_BASE64: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_BASE64 }}
+      ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_PASSWORD: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_PASSWORD }}
+
+      # Notarization
+      ORG_MAC_NOTARIZATION_TEAM_ID: ${{ secrets.ORG_MAC_NOTARIZATION_TEAM_ID }}
+      ORG_MAC_NOTARIZATION_APPLE_ID: ${{ secrets.ORG_MAC_NOTARIZATION_APPLE_ID }}
+      ORG_MAC_NOTARIZATION_PASSWORD: ${{ secrets.ORG_MAC_NOTARIZATION_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set Python 3
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      # Only run when not self hosted
+      - name: Import Application Signing Certificate
+        if: runner.environment == 'github-hosted'
+        uses: dhinakg/import-codesign-certs@master
+        with:
+          p12-file-base64: ${{ secrets.ORG_MAC_DEVELOPER_ID_APPLICATION_CERT_P12_BASE64 }}
+          p12-password: ${{ secrets.ORG_MAC_DEVELOPER_ID_APPLICATION_CERT_P12_PASSWORD }}
+
+      - name: Import Installer Signing Certificate
+        if: runner.environment == 'github-hosted'
+        uses: dhinakg/import-codesign-certs@master
+        with:
+          p12-file-base64: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_BASE64 }}
+          p12-password: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_PASSWORD }}
+
+      - name: Set up Python 3 libraries
+        run: python3 -m pip install --requirement requirements.txt
+
+      - name: Build portable executable
+        run: python3 build.py
+              --notarization-team-id "${{ env.ORG_MAC_NOTARIZATION_TEAM_ID }}"
+              --notarization-apple-id "${{ env.ORG_MAC_NOTARIZATION_APPLE_ID }}"
+              --notarization-password "${{ env.ORG_MAC_NOTARIZATION_PASSWORD }}"
+
+      - name: Upload installer package (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Escalate-Installer.pkg
+          path: build/Escalate-Installer.pkg
+
+      - name: Upload uninstaller package (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Escalate-Uninstaller.pkg
+          path: build/Escalate-Uninstaller.pkg
+
+      - name: Upload installer package (release)
+        if: github.event_name == 'release'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/Escalate-Installer.pkg
+          asset_name: Escalate-Installer.pkg
+          tag: ${{ github.ref }}
+          file_glob: true
+
+      - name: Upload uninstaller package (release)
+        if: github.event_name == 'release'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/Escalate-Uninstaller.pkg
+          asset_name: Escalate-Uninstaller.pkg
+          tag: ${{ github.ref }}
+          file_glob: true

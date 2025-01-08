@@ -2,13 +2,19 @@
 build.py: Build script for Music Is Illegal
 """
 
+import argparse
 import subprocess
 import macos_pkg_builder
+import mac_signing_buddy
 
 
 class BuildMusicIsIllegal:
 
-    def __init__(self):
+    def __init__(self, notarization_team_id: str = None, notarization_apple_id: str = None, notarization_password: str = None):
+        self._notarization_team_id = notarization_team_id
+        self._notarization_apple_id = notarization_apple_id
+        self._notarization_password = notarization_password
+
         self._file_structure = {
             "build/Release/Music-is-Illegal.app": "/Library/PrivilegedHelperTools/Music-is-Illegal.app",
             "extras/launch services/com.khronokernel.music-is-illegal.daemon.plist": "/Library/LaunchDaemons/com.khronokernel.music-is-illegal.daemon.plist",
@@ -58,6 +64,18 @@ class BuildMusicIsIllegal:
         subprocess.run(["/bin/rm", "-rf", "build"], check=True)
         subprocess.run(["/usr/bin/xcodebuild"], check=True)
 
+        if all([
+            self._notarization_team_id,
+            self._notarization_apple_id,
+            self._notarization_password,
+        ]):
+            mac_signing_buddy.Notarize(
+                file="build/Release/Music-is-Illegal.app",
+                apple_id=self._notarization_apple_id,
+                password=self._notarization_password,
+                team_id=self._notarization_team_id,
+            ).sign()
+
 
     def _package(self):
         """
@@ -84,11 +102,31 @@ class BuildMusicIsIllegal:
             pkg_output="Music-is-Illegal-Uninstaller.pkg",
             pkg_bundle_id="com.khronokernel.music-is-illegal.uninstall",
             pkg_preinstall_script="extras/install scripts/remove.sh",
+            pkg_signing_identity="Developer ID Installer: Mykola Grymalyuk (S74BDJXQMD)",
             pkg_as_distribution=True,
             pkg_background="extras/icons/PKG-Uninstall.png",
             pkg_version=self._version,
             pkg_title="Music Is Illegal Uninstaller",
         ).build() is True
+
+        if all([
+            self._notarization_team_id,
+            self._notarization_apple_id,
+            self._notarization_password,
+        ]):
+            mac_signing_buddy.Notarize(
+                file="Music-is-Illegal-Installer.pkg",
+                apple_id=self._notarization_apple_id,
+                password=self._notarization_password,
+                team_id=self._notarization_team_id,
+            ).sign()
+
+            mac_signing_buddy.Notarize(
+                file="Music-is-Illegal-Uninstaller.pkg",
+                apple_id=self._notarization_apple_id,
+                password=self._notarization_password,
+                team_id=self._notarization_team_id,
+            ).sign()
 
 
 
@@ -99,4 +137,14 @@ class BuildMusicIsIllegal:
 
 
 if __name__ == "__main__":
-    BuildMusicIsIllegal().run()
+    parser = argparse.ArgumentParser(description="Build script for Music Is Illegal")
+    parser.add_argument("--notarization-team-id", help="The Team ID to use for notarization", default=None)
+    parser.add_argument("--notarization-apple-id", help="The Apple ID to use for notarization", default=None)
+    parser.add_argument("--notarization-password", help="The password for the Apple ID", default=None)
+    args = parser.parse_args()
+
+    BuildMusicIsIllegal(
+        notarization_team_id=args.notarization_team_id,
+        notarization_apple_id=args.notarization_apple_id,
+        notarization_password=args.notarization_password,
+    ).run()
