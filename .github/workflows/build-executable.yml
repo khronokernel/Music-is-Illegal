@@ -63,22 +63,22 @@ jobs:
       - name: Upload installer package (artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: Escalate-Installer.pkg
-          path: build/Escalate-Installer.pkg
+          name: Music-is-Illegal-Installer.pkg
+          path: build/Music-is-Illegal-Installer.pkg
 
       - name: Upload uninstaller package (artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: Escalate-Uninstaller.pkg
-          path: build/Escalate-Uninstaller.pkg
+          name: Music-is-Illegal-Uninstaller.pkg
+          path: build/Music-is-Illegal-Uninstaller.pkg
 
       - name: Upload installer package (release)
         if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/Escalate-Installer.pkg
-          asset_name: Escalate-Installer.pkg
+          file: build/Music-is-Illegal-Installer.pkg
+          asset_name: Music-is-Illegal-Installer.pkg
           tag: ${{ github.ref }}
           file_glob: true
 
@@ -87,7 +87,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/Escalate-Uninstaller.pkg
-          asset_name: Escalate-Uninstaller.pkg
+          file: build/Music-is-Illegal-Uninstaller.pkg
+          asset_name: Music-is-Illegal-Uninstaller.pkg
           tag: ${{ github.ref }}
           file_glob: true
