@@ -54,9 +54,13 @@ jobs:
 
       - name: Import Provisioning Profile
         if: runner.environment == 'github-hosted'
-        run:
-          /bin/mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo -n "${{ secrets.ORG_MAC_MUSIC_IS_ILLEGAL_PROVISION_PROFILE }}" | /usr/bin/base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.provisionprofile
+        env:
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.ORG_MAC_MUSIC_IS_ILLEGAL_PROVISION_PROFILE }}
+        run: |
+          PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Set up Python 3 libraries
         run: python3 -m pip install --requirement requirements.txt
