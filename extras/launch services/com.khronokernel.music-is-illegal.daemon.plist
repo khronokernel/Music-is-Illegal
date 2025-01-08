@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.khronokernel.music-is-illegal.daemon</string>
+	<key>AssociatedBundleIdentifiers</key>
+	<array>
+		<string>com.khronokernel.music-is-illegal</string>
+	</array>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Library/PrivilegedHelperTools/Music-is-Illegal.app/Contents/MacOS/music-is-illegal</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+</dict>
+</plist>

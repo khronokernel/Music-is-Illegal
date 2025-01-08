@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadDescription</key>
+			<string>Configures Privacy Preferences Policy Control settings</string>
+			<key>PayloadDisplayName</key>
+			<string>Privacy Preferences Policy Control</string>
+			<key>PayloadIdentifier</key>
+			<string>com.khronokernel.music-is-illegal.full-disk-access.0B00ABA9-BAF5-4873-B009-935F4C40AE86</string>
+			<key>PayloadOrganization</key>
+			<string>Music is Illegal - Mykola Grymalyuk</string>
+			<key>PayloadType</key>
+			<string>com.apple.TCC.configuration-profile-policy</string>
+			<key>PayloadUUID</key>
+			<string>0B00ABA9-BAF5-4873-B009-935F4C40AE86</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>Services</key>
+			<dict>
+				<key>SystemPolicyAllFiles</key>
+				<array>
+					<dict>
+						<key>Allowed</key>
+						<true/>
+						<key>CodeRequirement</key>
+						<string>anchor apple generic and identifier "com.khronokernel.music-is-illegal" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = S74BDJXQMD)</string>
+						<key>Comment</key>
+						<string></string>
+						<key>Identifier</key>
+						<string>/Library/PrivilegedHelperTools/music-is-illegal.app</string>
+						<key>IdentifierType</key>
+						<string>path</string>
+						<key>StaticCode</key>
+						<false/>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Provide Music is Illegal Full Disk Access, as required by Endpoint Security</string>
+	<key>PayloadDisplayName</key>
+	<string>Music is Illegal - Full Disk Access</string>
+	<key>PayloadIdentifier</key>
+	<string>com.khronokernel.music-is-illegal.full-disk-access.7BCC6AEF-DF40-4A14-810D-1CFC7E14D828</string>
+	<key>PayloadOrganization</key>
+	<string>Music is Illegal - Mykola Grymalyuk</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>7BCC6AEF-DF40-4A14-810D-1CFC7E14D828</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

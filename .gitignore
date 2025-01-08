@@ -1,0 +1,13 @@
+# General
+.DS_Store
+*.pyc
+.vscode
+*.pkg
+
+# Xcode Settings
+xcuserdata/
+*.hmap
+*.dSYM.zip
+*.dSYM
+.build/
+build/
