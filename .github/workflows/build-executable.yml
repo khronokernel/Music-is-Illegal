@@ -21,7 +21,8 @@ jobs:
       # Installer Signing
       ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_BASE64: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_BASE64 }}
       ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_PASSWORD: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_PASSWORD }}
-
+      # Entitlements
+      ORG_MAC_MUSIC_IS_ILLEGAL_PROVISION_PROFILE: ${{ secrets.ORG_MAC_MUSIC_IS_ILLEGAL_PROVISION_PROFILE }}
       # Notarization
       ORG_MAC_NOTARIZATION_TEAM_ID: ${{ secrets.ORG_MAC_NOTARIZATION_TEAM_ID }}
       ORG_MAC_NOTARIZATION_APPLE_ID: ${{ secrets.ORG_MAC_NOTARIZATION_APPLE_ID }}
@@ -50,6 +51,12 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_BASE64 }}
           p12-password: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_PASSWORD }}
+
+      - name: Import Provisioning Profile
+        if: runner.environment == 'github-hosted'
+        run:
+          /bin/mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.ORG_MAC_MUSIC_IS_ILLEGAL_PROVISION_PROFILE }}" | /usr/bin/base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
 
       - name: Set up Python 3 libraries
         run: python3 -m pip install --requirement requirements.txt
