@@ -1,5 +1,11 @@
 /*
     Endpoint Security Client
+    ------------------------
+    Heavily based on Brandon7CC's ESClient.swift:
+    - https://github.com/Brandon7CC/mac-wheres-my-bootstrap
+
+    Apple Reference Documentation:
+    - https://developer.apple.com/documentation/endpointsecurity
  */
 
 import Foundation
