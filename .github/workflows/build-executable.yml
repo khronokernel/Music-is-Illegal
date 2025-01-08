@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build Universal Executable and Package
-    runs-on: macos-latest
+    runs-on: macos-15
     env:
       branch: ${{ github.ref }}
 
@@ -50,9 +50,6 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_BASE64 }}
           p12-password: ${{ secrets.ORG_MAC_DEVELOPER_ID_INSTALLER_CERT_P12_PASSWORD }}
-
-      - name: Switch to Xcode 16
-        run: sudo xcode-select -switch /Applications/Xcode_16.app/Contents/Developer
 
       - name: Set up Python 3 libraries
         run: python3 -m pip install --requirement requirements.txt
